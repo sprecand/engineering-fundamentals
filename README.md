@@ -20,3 +20,8 @@ az acr credential show --name EngFundamentals
 az acr credential show --name EngFundamentals
 sudo docker login EngFundamentals.azurecr.io -u EngFundamentals
 sudo docker run -p 3000:3000 EngFundamentals.azurecr.io/ipt-spins:latest
+
+# Allow github action to commit new version to repository
+ssh-keygen -t ed25519 -C "github-deploy-key" -f github-deploy-key -N ""
+Store public key in repository settings --> Deploy keys
+Store private key in repository settings --> Secrets and variables --> Actions --> DEPLOY_PRIVATE_KEY
