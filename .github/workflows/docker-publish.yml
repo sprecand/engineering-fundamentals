@@ -18,36 +18,21 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Log in to GitHub Container Registry
+      - name: Log in to Azure Container Registry
         run: echo "${{ secrets.ACR_PASSWORD }}" | docker login EngFundamentals.azurecr.io -u EngFundamentals --password-stdin
 
-      # - name: Get last tag and increment version
-      #   id: versioning
-      #   run: |
-      #     # Fetch all tags from GHCR
-      #     TAGS=$(curl -s -H "Authorization: Bearer ${{ secrets.GHCR_PAT }}" \
-      #     https://ghcr.io/v2/${{ github.actor }}/ipt-spins/tags/list | jq -r '.tags | map(select(test("^[0-9]+\\.[0-9]+$"))) | sort_by(. | tonumber) | last')
+      - name: Get latest tag and increment
+        id: get-latest-tag
+        run: |
+          LATEST_TAG=$(az acr repository show-tags --name EngFundamentals --repository ipt-spins --orderby time_desc --top 1 --output tsv | grep -Eo '[0-9]+(\.[0-9]+)?$' || echo "0.1")
+          NEW_TAG=$(awk "BEGIN {print $LATEST_TAG + 0.1}")
+          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
 
-      #     # Default to 1.0 if no previous tags exist
-      #     if [ -z "$TAGS" ]; then
-      #       NEW_TAG="1.0"
-      #     else
-      #       # Increment version by 0.1
-      #       NEW_TAG=$(awk -v tag="$TAGS" 'BEGIN {printf "%.1f", tag + 0.1}')
-      #     fi
-
-      #     echo "New tag: $NEW_TAG"
-      #     echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
-        
       - name: Build the Docker image
         run: |
-          docker build -t EngFundamentals.azurecr.io/ipt-spins:latest .
+          docker build -t EngFundamentals.azurecr.io/ipt-spins:$NEW_TAG -t EngFundamentals.azurecr.io/ipt-spins:latest .
 
-      - name: Push the Docker image to GHCR
+      - name: Push the Docker image to ACR
         run: |
+          docker push EngFundamentals.azurecr.io/ipt-spins:$NEW_TAG
           docker push EngFundamentals.azurecr.io/ipt-spins:latest
-
-      # - name: Update latest tag (optional)
-      #   run: |
-      #     docker tag ghcr.io/${{ github.actor }}/ipt-spins:${{ env.NEW_TAG }} ghcr.io/${{ github.actor }}/ipt-spins:latest
-      #     docker push ghcr.io/${{ github.actor }}/ipt-spins:latest
