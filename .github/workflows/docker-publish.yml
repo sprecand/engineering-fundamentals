@@ -24,7 +24,7 @@ jobs:
       - name: Get latest tag and increment
         id: get-latest-tag
         run: |
-          LATEST_TAG=$(az acr repository show-tags --name EngFundamentals --repository ipt-spins --orderby time_desc --top 1 --output tsv | grep -Eo '[0-9]+(\.[0-9]+)?$' || echo "0.1")
+          LATEST_TAG=$(az acr repository show-tags --name EngFundamentals --repository ipt-spins --output tsv | grep -E '^[0-9]+(\.[0-9]+)?$' | sort -Vr | head -n 1 || echo "0.0")
           NEW_TAG=$(awk "BEGIN {print $LATEST_TAG + 0.1}")
           echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
 
