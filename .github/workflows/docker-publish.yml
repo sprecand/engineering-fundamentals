@@ -19,14 +19,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Log in to GitHub Container Registry
-        run: echo "${{ secrets.ACR_PASSWORD }}" | docker login szeLernreiseEngFundamentals.azurecr.io -u szeLernreiseEngFundamentals --password-stdin
+        run: echo "${{ secrets.ACR_PASSWORD }}" | docker login EngFundamentals.azurecr.io -u EngFundamentals --password-stdin
 
       # - name: Get last tag and increment version
       #   id: versioning
       #   run: |
       #     # Fetch all tags from GHCR
       #     TAGS=$(curl -s -H "Authorization: Bearer ${{ secrets.GHCR_PAT }}" \
-      #     https://ghcr.io/v2/${{ github.actor }}/alpenzauber/tags/list | jq -r '.tags | map(select(test("^[0-9]+\\.[0-9]+$"))) | sort_by(. | tonumber) | last')
+      #     https://ghcr.io/v2/${{ github.actor }}/ipt-spins/tags/list | jq -r '.tags | map(select(test("^[0-9]+\\.[0-9]+$"))) | sort_by(. | tonumber) | last')
 
       #     # Default to 1.0 if no previous tags exist
       #     if [ -z "$TAGS" ]; then
@@ -41,13 +41,13 @@ jobs:
         
       - name: Build the Docker image
         run: |
-          docker build -t szeLernreiseEngFundamentals.azurecr.io/ipt-goes-cicd:latest .
+          docker build -t EngFundamentals.azurecr.io/ipt-spins:latest .
 
       - name: Push the Docker image to GHCR
         run: |
-          docker push szeLernreiseEngFundamentals.azurecr.io/ipt-goes-cicd:latest
+          docker push EngFundamentals.azurecr.io/ipt-spins:latest
 
       # - name: Update latest tag (optional)
       #   run: |
-      #     docker tag ghcr.io/${{ github.actor }}/alpenzauber:${{ env.NEW_TAG }} ghcr.io/${{ github.actor }}/alpenzauber:latest
-      #     docker push ghcr.io/${{ github.actor }}/alpenzauber:latest
+      #     docker tag ghcr.io/${{ github.actor }}/ipt-spins:${{ env.NEW_TAG }} ghcr.io/${{ github.actor }}/ipt-spins:latest
+      #     docker push ghcr.io/${{ github.actor }}/ipt-spins:latest
