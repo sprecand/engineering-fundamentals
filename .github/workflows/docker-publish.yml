@@ -42,7 +42,7 @@ jobs:
         run: |
           git add VERSION
           git commit -m "Bump version to $NEW_VERSION" || echo "No changes to commit"
-          git push git@github.com:your-username/your-repo.git main || echo "No changes to push"
+          git push git@github.com:iptch/engineering-fundamentals.git main || echo "No changes to push"
 
       - name: Build the Docker image
         run: |
