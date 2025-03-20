@@ -21,18 +21,34 @@ jobs:
       - name: Log in to Azure Container Registry
         run: echo "${{ secrets.ACR_PASSWORD }}" | docker login EngFundamentals.azurecr.io -u EngFundamentals --password-stdin
 
-      - name: Get latest tag and increment
-        id: get-latest-tag
+      - name: Read and increment version
+        id: versioning
         run: |
-          LATEST_TAG=$(az acr repository show-tags --name EngFundamentals --repository ipt-spins --output tsv | grep -E '^[0-9]+(\.[0-9]+)?$' | sort -Vr | head -n 1 || echo "0.0")
-          NEW_TAG=$(awk "BEGIN {print $LATEST_TAG + 0.1}")
-          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
+          VERSION_FILE="VERSION"
+          if [ ! -f "$VERSION_FILE" ]; then echo "0.0.0" > $VERSION_FILE; fi
+          CURRENT_VERSION=$(cat $VERSION_FILE)
+          NEW_VERSION=$(awk -F. '{print $1"."$2"."$3+1}' $VERSION_FILE)
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+          echo $NEW_VERSION > $VERSION_FILE
+
+      - name: Set up SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      - name: Commit and Push Updated Version
+        run: |
+          git add VERSION
+          git commit -m "Bump version to $NEW_VERSION" || echo "No changes to commit"
+          git push git@github.com:your-username/your-repo.git main || echo "No changes to push"
 
       - name: Build the Docker image
         run: |
-          docker build -t EngFundamentals.azurecr.io/ipt-spins:$NEW_TAG -t EngFundamentals.azurecr.io/ipt-spins:latest .
+          docker build -t EngFundamentals.azurecr.io/ipt-spins:$NEW_VERSION -t EngFundamentals.azurecr.io/ipt-spins:latest .
 
       - name: Push the Docker image to ACR
         run: |
-          docker push EngFundamentals.azurecr.io/ipt-spins:$NEW_TAG
+          docker push EngFundamentals.azurecr.io/ipt-spins:$NEW_VERSION
           docker push EngFundamentals.azurecr.io/ipt-spins:latest
