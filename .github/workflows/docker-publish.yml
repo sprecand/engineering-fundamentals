@@ -22,20 +22,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Azure Login with OIDC
-        id: azure-login # Added an ID to reference outputs
         uses: azure/login@v1
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          enable-AzPSSession: true # This helps with ACR login and sets outputs
+          # This enables login to Azure Container Registry (ACR) automatically by configuring the Docker credential helper.
+          enable-AzPSSession: true
 
-      - name: Explicitly Log in to Azure Container Registry
-        run: |
-          # Use the ACR username and password outputs from the azure/login step
-          echo "${{ steps.azure-login.outputs.acr-password }}" | docker login ${{ steps.azure-login.outputs.acr-login-server }} -u ${{ steps.azure-login.outputs.acr-username }} --password-stdin
-        # This step ensures Docker is explicitly authenticated with ACR
-        # before attempting to build and push images.
 
       - name: Read and increment version
         id: versioning
