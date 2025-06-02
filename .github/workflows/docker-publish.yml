@@ -21,6 +21,10 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Print GITHUB_REF
+        run: |
+          echo "GITHUB_REF is: ${{ github.ref }}"
+
       - name: Azure Login with OIDC
         uses: azure/login@v1
         with:
