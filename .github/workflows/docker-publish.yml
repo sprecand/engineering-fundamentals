@@ -18,6 +18,20 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v2.2.0 # Use the latest stable version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provided by GitHub Actions
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          # Optional: If your React project is in a subdirectory, specify it here
+          # projectBaseDir: ./frontend/
+          args: >
+            -Dsonar.projectKey=cyber-moon_temp-engineering-fundamentals-fork
+            -Dsonar.organization=cyber-moon
+            -Dsonar.sources=. # Or your source code directory, e.g., src
+            -Dsonar.tests=. # Or your test directory, e.g., src
+
       - name: Log in to Azure Container Registry
         run: |
           # Quick hack for ACR login
