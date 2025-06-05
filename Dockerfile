@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 
 # Install dependencies
-RUN npm install --frozen-lockfile
+RUN npm install --frozen-lockfile --ignore-scripts
 
 # Copy the rest of the app's source code
 COPY . .
@@ -20,7 +20,7 @@ RUN npm run build
 FROM node:18-alpine AS serve
 
 # Install a simple static server
-RUN npm install -g serve
+RUN npm install -g serve --ignore-scripts
 
 # Set working directory
 WORKDIR /app
