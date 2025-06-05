@@ -20,7 +20,7 @@ RUN npm run build
 FROM node:18-alpine AS serve
 
 # Install a simple static server
-RUN npm install -g serve --ignore-scripts
+RUN npm install --ignore-scripts -g serve
 
 # Set working directory
 WORKDIR /app
