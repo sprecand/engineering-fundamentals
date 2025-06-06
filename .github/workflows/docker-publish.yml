@@ -8,7 +8,6 @@ on:
       - opened
       - synchronize
       - reopened
-      - closed
   push:
     branches:
       - main
@@ -35,8 +34,7 @@ jobs:
 
   publish-docker-image:
     needs: code-analysis
-    # This job runs ONLY when a pull request targeting 'main' is merged.
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -46,7 +44,7 @@ jobs:
         with:
           # Fetch all tags to determine the next version
           fetch-tags: true
-          token: ${{ secrets.GITHUB_TOKEN }} 
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Log in to Azure Container Registry
         run: |
