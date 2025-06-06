@@ -32,7 +32,6 @@ jobs:
             -Dsonar.projectKey=cyber-moon_temp-engineering-fundamentals-fork
             -Dsonar.organization=cyber-moon
             -Dsonar.sources=.
-            -Dsonar.tests=.
 
   build-and-push:
     needs: code-analysis
