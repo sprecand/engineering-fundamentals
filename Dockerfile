@@ -39,8 +39,7 @@ WORKDIR /app
 RUN chown -R nodeapp:nodeapp /app
 
 # Copy build artifacts from previous stage
-COPY --from=build --chown=nodeapp:nodeapp /app/dist .
-RUN chmod -R 444 /app/dist
+COPY --from=build --chown=nodeapp:nodeapp --chmod=444 /app/dist .
 
 # Switch to the non-root user for running the application
 USER nodeapp
