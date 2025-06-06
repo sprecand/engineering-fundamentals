@@ -1,7 +1,9 @@
 # Build, Publish and Code Quality analysis in CI
-This readme helps you to create an automatic CI environment which builds your project, publishes it to Azure Container Registry and executes Code Quality Analsis.
+This readme helps you to create an CI environment which builds your project, publishes it to Azure Container Registry and executes Code Quality Analsis.
 
-The solutions to the below steps are found in seperate branches of this repository.
+### Branches
+- **baseline**: Starting point to solve exercices
+- **main**: Example solution (Musterlösung)
 
 ## PART A - Automatic Unit Tests
 
@@ -10,27 +12,27 @@ tbd DGA
 ## PART B - Continuous Integration
 
 ### 1 - Create Azure Container Registry
-1. Log in to azure, ensure to be part of ipt Sandbox subscription
-2. Create your own container registry on https://portal.azure.com/#browse/Microsoft.ContainerRegistry%2Fregistries
-    a) You will need to create a new resource group. Use default configs for resource group and container registry.
-    b) Use your initials (e.g. SZE) as prefix for Resource Group
-3. Get password of your ACR from your (local) Terminal. For the moment, we are using the ACR Admin credentials for publishing images to the ACR.
-```
-az login
-az acr update --name <My-Azure-ACR> --admin-enabled true
-az acr credential show --name <My-Azure-ACR>
-```
-4. save (first) password as ACR_PASSWORD in github project settings &rarr; Secrets and variables &rarr; Actions &rarr; Repository secrets
-
-### 2 - Publish your Webapp to ACR using gitlab pipelines
 1. Create a **public** fork of this Github repo **in your private github namespace** (this is required as we are using the FREE version of SonarCloud later on)
 ```
 git remote remove origin
 git remote add origin https://github.com/YourUsername/YourRepoName.git
 ```
-2. Follow the **Tasks A - C** in docker-publish.yml. Check that the Actions in your GitHub are executed properly.
+2. Log in to azure, ensure to be part of ipt Sandbox subscription
+3. Create your own container registry on https://portal.azure.com/#browse/Microsoft.ContainerRegistry%2Fregistries
+    a) You will need to create a new resource group. Use default configs for resource group and container registry.
+    b) Use your initials (e.g. SZE) as prefix for Resource Group
+4. Get password of your ACR from your (local) Terminal. For the moment, we are using the ACR Admin credentials for publishing images to the ACR.
+```
+az login
+az acr update --name <My-Azure-ACR> --admin-enabled true
+az acr credential show --name <My-Azure-ACR>
+```
+5. save (first) password as ACR_PASSWORD in github project settings &rarr; Secrets and variables &rarr; Actions &rarr; Repository secrets
 
-### 3 - Run ACR image on your local machine
+### 2 - Publish your Webapp to ACR using gitlab pipelines
+Follow the **Tasks A - C** in docker-publish.yml. Check that the Actions in your GitHub are executed properly.
+
+### 3 - Run ACR image on your local machine (optional)
 If Docker is available on your local machine, you can try to run your ACR image locally
 ```
 az acr credential show --name <My-Azure-ACR>
