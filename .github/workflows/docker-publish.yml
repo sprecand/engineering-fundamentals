@@ -2,35 +2,45 @@ name: Build and Push Docker Image
 
 on:
   pull_request:
-    types:
-      - closed
     branches:
       - main
+    types: # Trigger on pull_request activity types
+      - opened
+      - synchronize
+      - reopened
+      - closed
   push:
     branches:
       - main
 
 jobs:
-  build-and-push:
+  code-analysis:
     runs-on: ubuntu-latest
-
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # SonarCloud needs the full history
 
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v2.2.0 # Use the latest stable version
+        uses: SonarSource/sonarcloud-github-action@v2.2.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provided by GitHub Actions
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          # Optional: If your React project is in a subdirectory, specify it here
-          # projectBaseDir: ./frontend/
           args: >
             -Dsonar.projectKey=cyber-moon_temp-engineering-fundamentals-fork
             -Dsonar.organization=cyber-moon
-            -Dsonar.sources=. # Or your source code directory, e.g., src
-            -Dsonar.tests=. # Or your test directory, e.g., src
+            -Dsonar.sources=.
+            -Dsonar.tests=.
+
+  build-and-push:
+    needs: code-analysis
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
 
       - name: Log in to Azure Container Registry
         run: |
@@ -43,9 +53,10 @@ jobs:
           VERSION_FILE="VERSION"
           if [ ! -f "$VERSION_FILE" ]; then echo "0.0.0" > $VERSION_FILE; fi
           CURRENT_VERSION=$(cat $VERSION_FILE)
+          # Increment the patch version
           NEW_VERSION=$(awk -F. '{print $1"."$2"."$3+1}' $VERSION_FILE)
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
-          echo $NEW_VERSION > $VERSION_FILE
+          echo "$NEW_VERSION" > "$VERSION_FILE"
 
       - name: Set up SSH Key # for git push to GitHub
         run: |
@@ -59,7 +70,7 @@ jobs:
         run: |
           git add VERSION
           git commit -m "Bump version to $NEW_VERSION [skip ci]" || echo "No changes to commit"
-          git push git@github.com:iptch/engineering-fundamentals.git main || echo "No changes to push"
+          git push origin main || echo "No changes to push" # Use 'origin main' for clarity
 
       - name: Build the Docker image
         run: |
