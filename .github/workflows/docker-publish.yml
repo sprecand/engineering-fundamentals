@@ -56,37 +56,28 @@ jobs:
       - name: Generate and Push Git Tag for New Version
         id: versioning
         run: |
-          # Get the latest semantic version tag
+          # If no tags exist, start with v0.0
           git fetch origin --tags
-          LATEST_TAG=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n 1)
+          LATEST_TAG=$(git describe --tags --abbrev=0 --match "v[0-9]*.[0-9]*" 2>/dev/null || echo "v0.0")
 
-          # If no tags exist, start with v0.0.1
-          if [ -z "$LATEST_TAG" ]; then
-            NEW_VERSION="0.0.1"
-          else
-            # Remove 'v' prefix for version calculation
-            BASE_VERSION="${LATEST_TAG#v}"
-            # Increment the patch version
-            IFS='.' read -r major minor patch <<< "$BASE_VERSION"
-            NEW_VERSION="${major}.${minor}.$((patch + 1))"
-          fi
+          IFS='.' read -r major patch <<< "$LATEST_TAG"
 
-          FULL_TAG="v$NEW_VERSION"
+          FULL_TAG="${major}.$((patch + 1))"
 
           echo "Determined new version: $FULL_TAG"
-          echo "FULL_TAG=$FULL_TAG" >> $GITHUB_ENV
 
-          # Create the new Git tag
+          # Set the FULL_TAG as an output for subsequent steps
+          echo "full_tag=$FULL_TAG" >> "$GITHUB_OUTPUT"
+
+          # Create and push the new Git tag
           git tag "$FULL_TAG"
-
-          # Push the new Git tag to the remote repository
           git push origin "$FULL_TAG"
 
       - name: Build the Docker image
         run: |
-          docker build -t lrengineering.azurecr.io/ipt-spins:${{ env.FULL_TAG }} -t lrengineering.azurecr.io/ipt-spins:latest .
+          docker build -t lrengineering.azurecr.io/ipt-spins:${{ steps.versioning.outputs.full_tag }} -t lrengineering.azurecr.io/ipt-spins:latest .
 
       - name: Push the Docker image to ACR
         run: |
-          docker push lrengineering.azurecr.io/ipt-spins:${{ env.FULL_TAG }}
+          docker push lrengineering.azurecr.io/ipt-spins:${{ steps.versioning.outputs.full_tag }}
           docker push lrengineering.azurecr.io/ipt-spins:latest
