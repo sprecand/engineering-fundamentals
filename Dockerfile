@@ -27,16 +27,12 @@ RUN npm run build
 FROM node:18-alpine AS serve
 
 # Create a non-root user and group for the serve stage
-RUN addgroup --system nodeapp && adduser --system --ingroup nodeapp nodeapp
-
-# Install a simple static server
 RUN npm install --ignore-scripts -g serve
+    && addgroup --system nodeapp \
+    && adduser --system --ingroup nodeapp nodeapp
 
 # Set working directory
 WORKDIR /app
-
-# Change ownership of the working directory to the non-root user
-RUN chown -R nodeapp:nodeapp /app
 
 # Copy build artifacts from previous stage
 COPY --from=build --chown=root:root --chmod=755 /app/dist .
