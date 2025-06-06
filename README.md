@@ -18,6 +18,10 @@ az acr credential show --name <My-Azure-ACR>
 
 ## 2 - Publish your Webapp to ACR using gitlab pipelines
 1. Create a **public** fork of this Github repo **in your private github namespace** (this is required as we are using the FREE version of SonarCloud later on)
+```
+git remote remove origin
+git remote add origin https://github.com/YourUsername/YourRepoName.git
+```
 2. Follow the **Tasks A - C** in docker-publish.yml. Check that the Actions in your GitHub are executed properly.
 
 ## 3 - Run ACR image on your local machine
