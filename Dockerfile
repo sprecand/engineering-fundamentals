@@ -11,7 +11,8 @@ COPY package.json package-lock.json ./
 RUN npm install --frozen-lockfile --ignore-scripts
 
 # Copy the rest of the app's source code
-COPY . .
+COPY src ./src
+COPY vite.config.ts ./vite.config.ts
 
 # Build the React app
 RUN npm run build
