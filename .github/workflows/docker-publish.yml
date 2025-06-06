@@ -19,18 +19,16 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # SonarCloud needs the full history
+          fetch-depth: 0
 
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v2.2.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provided by GitHub Actions
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          args: >
-            -Dsonar.projectKey=cyber-moon_temp-engineering-fundamentals-fork
-            -Dsonar.organization=cyber-moon
-            -Dsonar.sources=.
+        run: echo "** TASK D - Replace this step with your SonarCloud analysis command (using SonarSource/sonarcloud-github-action@v2.2.0) **"
+        # Hints:
+          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provided by GitHub Actions
+          # SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Needs to be created in your SonarCloud Account and stored in your github repository secrets
+          # -Dsonar.projectKey=<your-project-key>
+          # -Dsonar.organization=<your-private-sonarcloud-organization>
+          # -Dsonar.sources=.
 
   publish-docker-image:
     needs: code-analysis
@@ -42,40 +40,21 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
         with:
-          # Fetch all tags to determine the next version
           fetch-tags: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Log in to Azure Container Registry
-        run: |
-          # Quick hack for ACR login
-          echo "${{ secrets.ACR_PASSWORD }}" | docker login lrengineering.azurecr.io -u LREngineering --password-stdin
+        run: echo "** TASK A - Log in to Azure Container Registry using admin credentials **"
 
       - name: Generate and Push Git Tag for New Version
-        id: versioning
         run: |
-          # If no tags exist, start with v0.0
-          git fetch origin --tags
-          LATEST_TAG=$(git tag --list 'v[0-9]*.[0-9]*' | sort -V | tail -n1 || echo "v0.0")
-
-          IFS='.' read -r major patch <<< "$LATEST_TAG"
-
-          FULL_TAG="${major}.$((patch + 1))"
-
-          echo "Determined new version: $FULL_TAG"
-
-          # Set the FULL_TAG as an output for subsequent steps
-          echo "full_tag=$FULL_TAG" >> "$GITHUB_OUTPUT"
-
-          # Create and push the new Git tag
-          git tag "$FULL_TAG"
-          git push origin "$FULL_TAG"
+          echo "** TASK B - Generate a new Git tag for the Docker image version. Start with version v0.1 resp. increment existing git tag by 0.1. **"
+          echo "Publish the git tag to the remote repository and store it as an output for subsequent steps. (hint: use GITHUB_OUTPUT)"
+          echo "full_tag=my-default-tag" >> $GITHUB_OUTPUT
 
       - name: Build the Docker image
         run: |
           docker build -t lrengineering.azurecr.io/ipt-spins:${{ steps.versioning.outputs.full_tag }} -t lrengineering.azurecr.io/ipt-spins:latest .
 
       - name: Push the Docker image to ACR
-        run: |
-          docker push lrengineering.azurecr.io/ipt-spins:${{ steps.versioning.outputs.full_tag }}
-          docker push lrengineering.azurecr.io/ipt-spins:latest
+        run: echo "** TASK C - Push the docker images to the ACR **"

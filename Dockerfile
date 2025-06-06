@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 
 # Install dependencies
-RUN npm install --frozen-lockfile --ignore-scripts
+RUN npm install --frozen-lockfile
 
 # Copy the rest of the app's source code
 COPY src ./src
@@ -27,7 +27,7 @@ RUN npm run build
 FROM node:18-alpine AS serve
 
 # Create a non-root user and group for the serve stage
-RUN npm install --ignore-scripts -g serve \
+RUN npm install -g serve \
     && addgroup --system nodeapp \
     && adduser --system --ingroup nodeapp nodeapp
 
