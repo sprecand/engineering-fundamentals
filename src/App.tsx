@@ -5,8 +5,6 @@ import './App.css'
 function App() {
   const [count, setCount] = useState(0)
 
-  const redundantData = "This variable is here for no good reason.";
-
   return (
     <>
       <div>
