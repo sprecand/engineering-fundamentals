@@ -33,7 +33,7 @@ jobs:
             -Dsonar.organization=cyber-moon
             -Dsonar.sources=.
 
-  build-and-push:
+  publish-docker-image:
     needs: code-analysis
     # This job runs ONLY when a pull request targeting 'main' is merged.
     if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true

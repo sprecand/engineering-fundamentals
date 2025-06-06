@@ -26,14 +26,19 @@ RUN npm run build
 # Use a lightweight web server for static files
 FROM node:18-alpine AS serve
 
-# Install a simple static server
+# Create a non-root user and group for the serve stage
 RUN npm install --ignore-scripts -g serve
+    && addgroup --system nodeapp \
+    && adduser --system --ingroup nodeapp nodeapp
 
 # Set working directory
 WORKDIR /app
 
 # Copy build artifacts from previous stage
-COPY --from=build /app/dist .
+COPY --from=build --chown=root:root --chmod=755 /app/dist .
+
+# Switch to the non-root user for running the application
+USER nodeapp
 
 # Expose the port the app runs on
 EXPOSE 3000
