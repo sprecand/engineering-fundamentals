@@ -9,9 +9,59 @@ This readme helps you to create an CI environment which builds your project, pub
 - **baseline**: Starting point to solve exercices
 - **main**: Example solution (Musterlösung)
 
-## PART A - Automatic Unit Tests
+# Setup verification
+Check your setup by running the component locally by executing the following commands in the root of this repo.
+```bash
+npm install
+npm run dev
+```
 
-tbd DGA
+## PART A - Automatic Unit Tests
+### 1 - Create a unit test
+In the src directory there is the main App.tsx file. There we use the ``src/Counter.tsx`` component to implement a button 
+which increments its counter everytime it is clicked. Write a Unit Test for the ``src/Counter.tsx`` component in the 
+``src/__tests__`` folder.
+
+If you are not using jest for implementing the unit tests change in the ``package.json`` the following line to the scripts section:
+```json lines
+{
+  "test": "jest"
+}
+```
+Now Execute your implemented unit test by running
+```bash
+npm test
+```
+
+### 2 - Automated test execution
+Adapt GitHub Actions workflow in the ``.gibhub/workflows`` directory such, that the unit tests are executed for every merge request and every push to the main 
+branch.
+
+
+Install the type definitions for React, React DOM, and Jest.
+This ensures better tooling support for writing tests in TypeScript.
+Add babel for typescript support
+```bash
+npm install --save-dev @types/react @types/react-dom @types/jest @testing-library/jest-dom ts-jest
+npm install --save-dev @babel/preset-typescript
+npm install --save-dev ts-node
+npm install --save-dev jest-environment-jsdom
+npm install --save-dev @testing-library/react @testing-library/jest-dom
+npm install --save-dev @svgr/webpack
+npm install --save-dev @testing-library/jest-dom
+npm install --save-dev ts-node
+npm install --save-dev jest-esm-transformer
+
+```
+
+Add the following script the package.json
+```json
+{
+  "scripts": {
+    "test": "jest"
+  } 
+}
+```
 
 ## PART B - Continuous Integration
 
