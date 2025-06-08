@@ -1,26 +1,14 @@
-import { useState } from 'react'
-import iptLogo from './assets/ipt.svg'
-import './App.css'
+import "./App.css";
+import Logo from "./Logo";
+import Counter from "./Counter";
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  const redundantData = "This variable is here for no good reason.";
-  
   return (
     <>
-      <div>
-        <a href="https://ipt.ch" target="_blank">
-          <img src={iptLogo} className="logo ipt" alt="ipt logo" />
-        </a>
-      </div>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-      </div>
+      <Logo />
+      <Counter />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
