@@ -77,8 +77,12 @@ sudo docker run -p 3000:3000 <My-Azure-ACR>.azurecr.io/ipt-spins:latest
 ```
 
 ## PART C - Continuous Deployment
-
-tbd DGA
+In this section you are going to create a GitHub Action which runs after the publishing to Azure was successful. 
+For this you will need the following:
+1. A service plan in azure (choose the free option)
+2. Create a Web App in azure, where this application is deployed
+3. A Service Principal in Azure which has the contributor role on your resource
+4. Create a new workflow for GitHub
 
 ## PART D - Code Quality
 
