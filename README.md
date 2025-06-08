@@ -37,32 +37,6 @@ npm test
 Adapt GitHub Actions workflow in the ``.gibhub/workflows`` directory such, that the unit tests are executed for every merge request and every push to the main 
 branch.
 
-
-Install the type definitions for React, React DOM, and Jest.
-This ensures better tooling support for writing tests in TypeScript.
-Add babel for typescript support
-```bash
-npm install --save-dev @types/react @types/react-dom @types/jest @testing-library/jest-dom ts-jest
-npm install --save-dev @babel/preset-typescript
-npm install --save-dev ts-node
-npm install --save-dev jest-environment-jsdom
-npm install --save-dev @testing-library/react @testing-library/jest-dom
-npm install --save-dev @svgr/webpack
-npm install --save-dev @testing-library/jest-dom
-npm install --save-dev ts-node
-npm install --save-dev jest-esm-transformer
-
-```
-
-Add the following script the package.json
-```json
-{
-  "scripts": {
-    "test": "jest"
-  } 
-}
-```
-
 ## PART B - Continuous Integration
 
 ### 1 - Create Azure Container Registry
