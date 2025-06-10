@@ -22,7 +22,7 @@ jobs:
           fetch-depth: 0
 
       - name: SonarCloud Scan
-        run: echo "** TASK D - Replace this step with your SonarCloud analysis command (using SonarSource/sonarcloud-github-action@v2.2.0) **"
+        run: echo "** TASK D.1 - Replace this step with your SonarCloud analysis command (using SonarSource/sonarcloud-github-action@v2.2.0) **"
         # Hints:
           # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provided by GitHub Actions
           # SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Needs to be created in your SonarCloud Account and stored in your github repository secrets
@@ -44,11 +44,11 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Log in to Azure Container Registry
-        run: echo "** TASK A - Log in to Azure Container Registry using admin credentials **"
+        run: echo "** TASK B.1 - Log in to Azure Container Registry using admin credentials **"
 
       - name: Generate and Push Git Tag for New Version
         run: |
-          echo "** TASK B - Generate a new Git tag for the Docker image version. Start with version v0.1 resp. increment existing git tag by 0.1. **"
+          echo "** TASK B.2 - Generate a new Git tag for the Docker image version. Start with version v0.1 resp. increment existing git tag by 0.1. **"
           echo "Publish the git tag to the remote repository and store it as an output for subsequent steps. (hint: use GITHUB_OUTPUT)"
           echo "full_tag=my-default-tag" >> $GITHUB_OUTPUT
 
@@ -57,4 +57,4 @@ jobs:
           docker build -t lrengineering.azurecr.io/ipt-spins:${{ steps.versioning.outputs.full_tag }} -t lrengineering.azurecr.io/ipt-spins:latest .
 
       - name: Push the Docker image to ACR
-        run: echo "** TASK C - Push the docker images to the ACR **"
+        run: echo "** TASK B.3 - Push the docker images to the ACR **"

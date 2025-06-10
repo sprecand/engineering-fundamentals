@@ -66,7 +66,7 @@ az acr credential show --name <My-Azure-ACR>
 6. save (first) password as ACR_PASSWORD in github project settings &rarr; Secrets and variables &rarr; Actions &rarr; Repository secrets
 
 ### Publish your Webapp to ACR using gitlab pipelines
-Follow the **Tasks A - C** in docker-publish.yml. Check that the Actions in your GitHub are executed properly.
+Follow the **Tasks B.1 - B.3** in docker-publish.yml. Check that the Actions in your GitHub are executed properly.
 
 ### Run ACR image on your local machine (optional)
 If Docker is available on your local machine, you can try to run your ACR image locally
@@ -91,11 +91,11 @@ For this you will need the following:
 2. Create a new SonarCloud project (within our private SonarCloud organisation) for your github repository (stored in your private github account)
     a) Select 'Previous version' when prompted
 3. Create a Security Token (My Account &rarr; Security) and store it in your github project settings as SONAR_TOKEN
-4. In the project settings under 'Analysis Method', disable 'Automatic Analysis'. This allows us to use CI Analysis, which provides more control over when the repository is analysed and which data is incorporated (for example test coverage reports).
+4. In the SonarCloud project settings under 'Analysis Method', disable 'Automatic Analysis'. This allows us to use CI Analysis, which provides more control over when the repository is analysed and which data is incorporated (for example test coverage reports).
 5. Optional: Check the "Quality Gates" section in your SonarCloud organisation. Your can add and customize your own quality gates.
 
 ### Extend your GitHub Actions to use SonarCloud
-1. Follow the **Task D** in docker-publish.yml to enable SonarCloud analysis for each new Pull Request.
+1. Follow the **Task D.1** in docker-publish.yml to enable SonarCloud analysis for each new Pull Request.
 2. Observe your issues in SonarCloud, namely in App.tsx and Dockerfile. Fix them.
 
 ## PART E - Security (Optional)
