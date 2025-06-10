@@ -9,8 +9,22 @@ This readme helps you to create an CI environment which builds your project, pub
 - **baseline**: Starting point to solve exercices
 - **main**: Example solution (Musterlösung)
 
-# Setup verification
-Check your setup by running the component locally by executing the following commands in the root of this repo.
+# Setup
+1. Create a **public** fork of this Github repo **in your private github namespace** (this is required as we are using the FREE version of SonarCloud later on) \
+  a) Create an empty repository in your personal github namespace
+  b) Execute in your local terminal:
+```
+git checkout git@github.com:iptch/engineering-fundamentals.git
+git remote remove origin
+git remote add origin https://github.com/<YourUsername>/<YourRepoName>.git
+git push
+```
+2. Create Codespace (https://github.com/YourUsername/YourRepoName &rarr; Code &rarr; Codespaces) and install the azure cli
+```
+pip install azure-cli
+```
+3. Verification
+Check your setup by running the react app in your codespace. You should be able to access the Webapp in your browser.
 ```bash
 npm install
 npm run dev
@@ -40,30 +54,17 @@ branch.
 ## PART B - Continuous Integration
 
 ### Create Azure Container Registry
-1. Create a **public** fork of this Github repo **in your private github namespace** (this is required as we are using the FREE version of SonarCloud later on) \
-  a) Either: Hit '+' in top right of your Github, select 'Import Repository'. Your ipt github user and an access token is required to clone the repo. \
-  b) Or, create an empty repository in your personal github namespace and execute this in your local terminal:
-```
-git checkout git@github.com:iptch/engineering-fundamentals.git
-git remote remove origin
-git remote add origin https://github.com/<YourUsername>/<YourRepoName>.git
-git push
-```
-2. Create Codespace (https://github.com/YourUsername/YourRepoName &rarr; Code &rarr; Codespaces) and install the azure cli
-```
-pip install azure-cli
-```
-3. Log in to azure, ensure to be part of ipt Sandbox subscription
-4. Create your own container registry on https://portal.azure.com/#browse/Microsoft.ContainerRegistry%2Fregistries \
+1. Log in to azure using your browser, ensure to be part of ipt Sandbox subscription
+2. Create your own container registry on https://portal.azure.com/#browse/Microsoft.ContainerRegistry%2Fregistries \
     a) You will need to create a new resource group. Use default configs for resource group and container registry. \
     b) Use your initials (e.g. SZE) as prefix for Resource Group
-5. Get password of your ACR from your (local) Terminal. For the moment, we are using the ACR Admin credentials for publishing images to the ACR.
+3. Get password of your ACR from your (local) Terminal. For the moment, we are using the ACR Admin credentials for publishing images to the ACR.
 ```
 az login
 az acr update --name <My-Azure-ACR> --admin-enabled true
 az acr credential show --name <My-Azure-ACR>
 ```
-6. save (first) password as ACR_PASSWORD in github project settings &rarr; Secrets and variables &rarr; Actions &rarr; Repository secrets
+4. save (first) password as ACR_PASSWORD in github project settings &rarr; Secrets and variables &rarr; Actions &rarr; Repository secrets
 
 ### Publish your Webapp to ACR using gitlab pipelines
 Follow the **Tasks B.1 - B.3** in docker-publish.yml. Check that the Actions in your GitHub are executed properly.
