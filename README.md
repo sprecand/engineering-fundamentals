@@ -17,7 +17,7 @@ npm run dev
 ```
 
 ## PART A - Automatic Unit Tests
-### 1 - Create a unit test
+### Create a unit test
 In the src directory there is the main App.tsx file. There we use the ``src/Counter.tsx`` component to implement a button 
 which increments its counter everytime it is clicked. Write a Unit Test for the ``src/Counter.tsx`` component in the 
 ``src/__tests__`` folder.
@@ -33,13 +33,13 @@ Now Execute your implemented unit test by running
 npm test
 ```
 
-### 2 - Automated test execution
+### Automated test execution
 Adapt GitHub Actions workflow in the ``.gibhub/workflows`` directory such, that the unit tests are executed for every merge request and every push to the main 
 branch.
 
 ## PART B - Continuous Integration
 
-### 1 - Create Azure Container Registry
+### Create Azure Container Registry
 1. Create a **public** fork of this Github repo **in your private github namespace** (this is required as we are using the FREE version of SonarCloud later on) \
   a) Either: Hit '+' in top right of your Github, select 'Import Repository'. Your ipt github user and an access token is required to clone the repo. \
   b) Or, create an empty repository in your personal github namespace and execute this in your local terminal:
@@ -65,10 +65,10 @@ az acr credential show --name <My-Azure-ACR>
 ```
 6. save (first) password as ACR_PASSWORD in github project settings &rarr; Secrets and variables &rarr; Actions &rarr; Repository secrets
 
-### 2 - Publish your Webapp to ACR using gitlab pipelines
+### Publish your Webapp to ACR using gitlab pipelines
 Follow the **Tasks A - C** in docker-publish.yml. Check that the Actions in your GitHub are executed properly.
 
-### 3 - Run ACR image on your local machine (optional)
+### Run ACR image on your local machine (optional)
 If Docker is available on your local machine, you can try to run your ACR image locally
 ```
 az acr credential show --name <My-Azure-ACR>
@@ -86,7 +86,7 @@ For this you will need the following:
 
 ## PART D - Code Quality
 
-### 4 - Create SonarCloud Project
+### Create SonarCloud Project
 1. Login to SonarCloud.io using your **Github Account**
 2. Create a new SonarCloud project (within our private SonarCloud organisation) for your github repository (stored in your private github account)
     a) Select 'Previous version' when prompted
@@ -94,19 +94,16 @@ For this you will need the following:
 4. In the project settings under 'Analysis Method', disable 'Automatic Analysis'. This allows us to use CI Analysis, which provides more control over when the repository is analysed and which data is incorporated (for example test coverage reports).
 5. Optional: Check the "Quality Gates" section in your SonarCloud organisation. Your can add and customize your own quality gates.
 
-### 5 - Extend your GitHub Actions to use SonarCloud
+### Extend your GitHub Actions to use SonarCloud
 1. Follow the **Task D** in docker-publish.yml to enable SonarCloud analysis for each new Pull Request.
 2. Observe your issues in SonarCloud, namely in App.tsx and Dockerfile. Fix them.
 
-## PART E - Security
+## PART E - Security (Optional)
 
-### 6 - Optional: Use OIDC instead of Admin credentials
+### Use OIDC instead of Admin credentials
 Instead of using the ACR Admin credentials, extend your setup to use OIDC.
 
+## PART F - GitOps (Optional)
 
-# Backup: Run Webapp locally
-Here's how you can run and test your Webapp locally:
-```
-npm install
-npm run dev
-```
+### Use ArgoCD
+Replace the deployment github action in PART C with ArgoCD.
