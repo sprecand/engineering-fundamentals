@@ -29,6 +29,16 @@ jobs:
           # -Dsonar.projectKey=<your-project-key>
           # -Dsonar.organization=<your-private-sonarcloud-organization>
           # -Dsonar.sources=.
+  test:
+    needs: code-analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: execute the unit test
+        run: echo "** TASK A - Add the necessary steps such that the unit test is executed on every merge request or pull request on the main branch."
+
 
   publish-docker-image:
     needs: code-analysis
