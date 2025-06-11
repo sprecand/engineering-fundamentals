@@ -30,18 +30,12 @@ npm install
 npm run dev
 ```
 
-## PART A - Automatic Unit Tests
+## PART A - Unit Test
 ### Create a unit test
 In the src directory there is the main App.tsx file. There we use the ``src/Counter.tsx`` component to implement a button 
 which increments its counter everytime it is clicked. Write a Unit Test for the ``src/Counter.tsx`` component in the 
-``src/__tests__`` folder.
+``src/__tests__`` folder using the jest.
 
-If you are not using jest for implementing the unit tests change in the ``package.json`` the following line to the scripts section:
-```json lines
-{
-  "test": "jest"
-}
-```
 Now Execute your implemented unit test by running
 ```bash
 npm test
