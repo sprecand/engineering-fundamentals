@@ -14,7 +14,7 @@ This readme helps you to create an CI environment which builds your project, pub
   a) Create an empty repository in your personal github namespace
   b) Execute in your local terminal:
 ```
-git checkout git@github.com:iptch/engineering-fundamentals.git
+git clone git@github.com:iptch/engineering-fundamentals.git
 git remote remove origin
 git remote add origin https://github.com/<YourUsername>/<YourRepoName>.git
 git push
@@ -48,8 +48,8 @@ branch.
 ## PART B - Continuous Integration
 
 ### Create Azure Container Registry
-1. Log in to azure using your browser, ensure to be part of ipt Sandbox subscription
-2. Create your own container registry on https://portal.azure.com/#browse/Microsoft.ContainerRegistry%2Fregistries \
+1. Log in to azure using your browser, ensure to be part of [ipt Sandbox subscription](https://app.happeo.com/pages/1e1oopl952ukqf9e0h/AzureAmpDu/1e5g766dso0ms8i9mp)
+2. Create your own [azure container registry](https://portal.azure.com/#browse/Microsoft.ContainerRegistry%2Fregistries) \
     a) You will need to create a new resource group. Use default configs for resource group and container registry. \
     b) Use your initials (e.g. SZE) as prefix for Resource Group
 3. Get password of your ACR from your (local) Terminal. For the moment, we are using the ACR Admin credentials for publishing images to the ACR.
