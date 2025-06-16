@@ -102,3 +102,10 @@ Instead of using the ACR Admin credentials, extend your setup to use OIDC.
 
 ### Use ArgoCD
 Replace the deployment github action in PART C with ArgoCD.
+
+# Debug / FAQ
+### "Build and Push Docker Image" fails with
+```
+Error response from daemon: Get "https://lrengineering.azurecr.io/v2/": dial tcp: lookup lrengineering.azurecr.io on 127.0.0.53:53: no such host
+```
+&rarr; Probably, your Azure Container Registry got deleten due to regular cleanup of ipt sandbox. Follow the steps in **PART B** to create a new one.
