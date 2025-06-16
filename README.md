@@ -104,7 +104,7 @@ as new Secret with the name ``AZURE_RESOURCEGROUP_CONTRIBUTOR_SERVICEPRINICIPAL`
 for the application name with under ``AZURE_WEBAPP_NAME`` containing ``<your-webapp-name> ``.
 
 4. Create a new workflow for GitHub where you deploy the latest version of your application which you published before to the registry.
-5. Test your setup by making a change on the codebase (for example make the logo spin faster) and verify that the change is visible on your deployed webapp
+5. Test your setup by making a change on the codebase (for example make the logo spin faster) and verify that the change is visible on your deployed webapp.
 
 ## PART D - Code Quality
 
