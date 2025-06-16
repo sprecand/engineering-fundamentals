@@ -93,7 +93,9 @@ For this you will need the following:
 ### Extend your GitHub Actions to use SonarCloud
 1. Follow the **Task D.1** in docker-publish.yml to enable SonarCloud analysis for each new Pull Request. \
   a) Use the Project Key and Organization Key found in your SonarCloud project under 'Information'
-2. Observe your issues in SonarCloud, namely in App.tsx and Dockerfile. Fix them.
+2. Observe your issues in SonarCloud. **Fix them**.: \
+  a) Issue in **App.tsx** (SonarCloud Project &rarr; Main Branch &rarr; Overall Code &rarr; Maintainability) \
+  b) Issue in **Dockerfile** (SonarCloud Project &rarr; Main Branch &rarr; Overall Code &rarr; Security Hotspots)
 
 ## PART E - Security (Optional)
 
