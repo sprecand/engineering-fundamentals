@@ -8,12 +8,10 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 
 # Install dependencies
-RUN npm install --frozen-lockfile
+RUN npm ci --ignore-scripts
 
 # Copy the rest of the app's source code
 COPY src ./src
-COPY package.json ./package.json
-COPY package-lock.json ./package-lock.json
 COPY index.html ./index.html
 COPY tsconfig.app.json ./tsconfig.app.json
 COPY tsconfig.json ./tsconfig.json

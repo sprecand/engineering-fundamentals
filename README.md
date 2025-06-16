@@ -18,7 +18,8 @@ git clone git@github.com:iptch/engineering-fundamentals.git
 cd engineering-fundamentals
 git remote remove origin
 git remote add origin https://github.com/<YourUsername>/<YourRepoName>.git
-git push --set-upstream origin baseline
+git branch -m main
+git push --set-upstream origin main
 ```
 2. Create Codespace (https://github.com/YourUsername/YourRepoName &rarr; Code &rarr; Codespaces) and install the azure cli
 ```
@@ -27,6 +28,7 @@ pip install azure-cli
 3. Verification
 Check your setup by running the react app in your codespace. You should be able to access the Webapp in your browser.
 ```bash
+nvm install node
 npm install
 npm run dev
 ```
@@ -84,7 +86,7 @@ For this you will need the following:
 
 ### Create SonarCloud Project
 1. Login to SonarCloud.io using your **Github Account**
-2. Create a new SonarCloud project (within our private SonarCloud organisation) for your github repository (stored in your private github account)
+2. Create a new SonarCloud project (within your private SonarCloud organisation) for your github repository (stored in your private github account)
     a) Select 'Previous version' when prompted
 3. Create a Security Token (My Account &rarr; Security) and store it in your github project settings as SONAR_TOKEN
 4. In the SonarCloud project settings under 'Analysis Method', disable 'Automatic Analysis'. This allows us to use CI Analysis, which provides more control over when the repository is analysed and which data is incorporated (for example test coverage reports).
