@@ -6,8 +6,8 @@ This readme helps you to create an CI environment which builds your project, pub
 - Be part of ipt organisation in Github
 
 ### Branches
-- **baseline**: Starting point to solve exercices
-- **main**: Example solution (Musterlösung)
+- **main**: Starting point to solve exercices
+- **solution**: Example solution (Musterlösung)
 
 # Setup
 1. Create a **public** fork of this Github repo **in your private github namespace** (this is required as we are using the FREE version of SonarCloud later on) \
@@ -18,7 +18,6 @@ git clone git@github.com:iptch/engineering-fundamentals.git
 cd engineering-fundamentals
 git remote remove origin
 git remote add origin https://github.com/<YourUsername>/<YourRepoName>.git
-git branch -m main
 git push --set-upstream origin main
 ```
 2. Create Codespace (https://github.com/YourUsername/YourRepoName &rarr; Code &rarr; Codespaces) and install the azure cli
@@ -45,8 +44,7 @@ npm test
 ```
 
 ### Automated test execution
-Adapt GitHub Actions workflow in the ``.gibhub/workflows`` directory such, that the unit tests are executed for every merge request and every push to the main 
-branch.
+Adapt GitHub Actions workflow in the ``.gibhub/workflows`` directory such, that the unit tests are executed for every merge request and every push to the main branch.
 
 ## PART B - Continuous Integration
 
