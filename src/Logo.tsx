@@ -4,7 +4,7 @@ function Logo() {
   return (
     <div>
       <a href="https://ipt.ch" target="_blank">
-        <img src={iptLogo} className="logo" alt="ipt logo" />
+        <img src={iptLogo} className="logo" alt="ipt logo test" />
       </a>
     </div>
   );
