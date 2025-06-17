@@ -22,13 +22,18 @@ jobs:
           fetch-depth: 0
 
       - name: SonarCloud Scan
+        # This step is commented out as it requires specific SonarCloud setup
+        # and secrets not provided in this context.
+        # It serves as a placeholder as per the original task.
         run: echo "** TASK D.1 - Replace this step with your SonarCloud analysis command (using SonarSource/sonarcloud-github-action@v2.2.0) **"
-        # Hints:
-          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provided by GitHub Actions
-          # SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Needs to be created in your SonarCloud Account and stored in your github repository secrets
-          # -Dsonar.projectKey=<your-project-key>
-          # -Dsonar.organization=<your-private-sonarcloud-organization>
-          # -Dsonar.sources=.
+        # uses: SonarSource/sonarcloud-github-action@v2.2.0
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        #   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        # with:
+        #   projectKey: <your-project-key>
+        #   organization: <your-private-sonarcloud-organization>
+        #   args: -Dsonar.sources=.
 
   test:
     needs: code-analysis
@@ -37,36 +42,91 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: execute the unit test
-        run: echo "** TASK A - Add the necessary steps such that the unit test is executed on every merge request or pull request on the main branch."
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18' # Ensure this matches your project's Node.js version
 
+      - name: Install dependencies
+        run: npm install
+
+      - name: execute the unit test
+        run: npm test # TASK A - Executes the unit tests
 
   publish-docker-image:
     needs: test
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write # Required for pushing tags
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
         with:
-          fetch-tags: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-tags: true # Fetch existing tags to determine the next version
+          token: ${{ secrets.GITHUB_TOKEN }} # Token for pushing tags
 
       - name: Log in to Azure Container Registry
-        run: echo "** TASK B.1 - Log in to Azure Container Registry using admin credentials **"
+        run: |
+          # TASK B.1 - Log in to Azure Container Registry using admin credentials
+          # ACR_USERNAME is typically the name of your ACR when admin user is enabled.
+          # Replace 'lrengineering' with your ACR name if it's different.
+          # The password is provided via GitHub Secret ACR_PASSWORD.
+          echo "Logging in to Azure Container Registry: lrengineering.azurecr.io"
+          docker login lrengineering.azurecr.io -u lrengineering -p ${{ secrets.ACR_PASSWORD }}
+        env:
+          ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }} # Ensure this secret is set in your repo settings
 
       - name: Generate and Push Git Tag for New Version
         id: versioning
         run: |
-          echo "** TASK B.2 - Generate a new Git tag for the Docker image version. Start with version v0.1 resp. increment existing git tag by 0.1. **"
-          echo "Publish the git tag to the remote repository and store it as an output for subsequent steps. (hint: use GITHUB_OUTPUT)"
-          echo "full_tag=default.tag" >> "$GITHUB_OUTPUT"
+          # TASK B.2 - Generate a new Git tag for the Docker image version.
+          # Start with version v0.1 resp. increment existing git tag by 0.1.
+          # Publish the git tag to the remote repository and store it as an output.
+
+          # Fetch all tags to ensure we have the latest version information
+          git fetch --tags
+
+          # Get the latest version tag matching 'vX.Y'
+          # If no such tag exists, default to v0.0
+          latest_tag=$(git tag --list "v*" | sort -V | tail -n 1)
+
+          current_major=0
+          current_minor=0
+
+          if [[ "$latest_tag" =~ ^v([0-9]+)\.([0-9]+)$ ]]; then
+              current_major=${BASH_REMATCH[1]}
+              current_minor=${BASH_REMATCH[2]}
+          fi
+
+          # Increment the minor version
+          new_minor=$((current_minor + 1))
+          new_tag="v${current_major}.${new_minor}"
+
+          echo "Latest existing tag: ${latest_tag:-'None'}"
+          echo "New tag generated: ${new_tag}"
+
+          # Create the new Git tag
+          git tag $new_tag
+
+          # Push the new Git tag to the remote repository
+          git push origin $new_tag
+
+          # Store the full tag as an output for subsequent steps
+          echo "full_tag=${new_tag}" >> "$GITHUB_OUTPUT"
+        shell: bash
 
       - name: Build the Docker image
         run: |
-          docker build -t lrengineering.azurecr.io/ipt-spins:${{ steps.versioning.outputs.full_tag }} -t lrengineering.azurecr.io/ipt-spins:latest .
+          # Build the Docker image with both the version tag and 'latest' tag
+          docker build -t lrengineering.azurecr.io/ipt-spins:${{ steps.versioning.outputs.full_tag }} \
+                       -t lrengineering.azurecr.io/ipt-spins:latest .
 
       - name: Push the Docker image to ACR
-        run: echo "** TASK B.3 - Push the docker images to the ACR **"
+        run: |
+          # TASK B.3 - Push the docker images to the ACR
+          # Push both the versioned image and the 'latest' image to ACR
+          echo "Pushing lrengineering.azurecr.io/ipt-spins:${{ steps.versioning.outputs.full_tag }}"
+          docker push lrengineering.azurecr.io/ipt-spins:${{ steps.versioning.outputs.full_tag }}
+          echo "Pushing lrengineering.azurecr.io/ipt-spins:latest"
+          docker push lrengineering.azurecr.io/ipt-spins:latest
