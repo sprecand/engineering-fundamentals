@@ -22,18 +22,17 @@ jobs:
           fetch-depth: 0
 
       - name: SonarCloud Scan
-        # This step is commented out as it requires specific SonarCloud setup
-        # and secrets not provided in this context.
-        # It serves as a placeholder as per the original task.
-        run: echo "** TASK D.1 - Replace this step with your SonarCloud analysis command (using SonarSource/sonarcloud-github-action@v2.2.0) **"
-        # uses: SonarSource/sonarcloud-github-action@v2.2.0
-        # env:
-        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        #   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        # with:
-        #   projectKey: <your-project-key>
-        #   organization: <your-private-sonarcloud-organization>
-        #   args: -Dsonar.sources=.
+        # TASK D.1 - Replace this step with your SonarCloud analysis command (using SonarSource/sonarcloud-github-action@v2.2.0)
+        uses: SonarSource/sonarcloud-github-action@v2.2.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provided by GitHub Actions
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Needs to be created in your SonarCloud Account and stored in your github repository secrets
+        with:
+          # Replace <your-project-key> with your actual SonarCloud project key
+          projectKey: sprecand_engineering-fundamentals
+          # Replace <your-private-sonarcloud-organization> with your actual SonarCloud organization
+          organization: sprecand
+          args: -Dsonar.sources=. # Specifies that the entire repository is scanned
 
   test:
     needs: code-analysis
