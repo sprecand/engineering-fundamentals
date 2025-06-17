@@ -70,7 +70,6 @@ jobs:
         run: |
           # TASK B.1 - Log in to Azure Container Registry using admin credentials
           # ACR_USERNAME is typically the name of your ACR when admin user is enabled.
-          # Replace 'asplreng' with your ACR name if it's different.
           # The password is provided via GitHub Secret ACR_PASSWORD.
           echo "Logging in to Azure Container Registry: asplreng.azurecr.io"
           docker login asplreng.azurecr.io -u asplreng -p ${{ secrets.ACR_PASSWORD }}
@@ -130,3 +129,24 @@ jobs:
           docker push asplreng.azurecr.io/ipt-spins:${{ steps.versioning.outputs.full_tag }}
           echo "Pushing asplreng.azurecr.io/ipt-spins:latest"
           docker push asplreng.azurecr.io/ipt-spins:latest
+
+  # PART C - Continuous Deployment
+  deploy-to-azure:
+    needs: publish-docker-image # This job runs only after the Docker image is published
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_RESOURCEGROUP_CONTRIBUTOR_SERVICEPRINICIPAL }}
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }} # Name of your Azure Web App
+          resource-group: asplreng # Your resource group name
+          container-name: asplreng.azurecr.io/ipt-spins:latest # Image to deploy from your ACR
