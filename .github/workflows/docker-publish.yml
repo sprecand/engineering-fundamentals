@@ -148,5 +148,5 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ secrets.AZURE_WEBAPP_NAME }} # Name of your Azure Web App
-          resource-group: asplreng # Your resource group name
-          container-name: asplreng.azurecr.io/ipt-spins:latest # Image to deploy from your ACR
+          resource-group-name: asplreng # Your resource group name
+          images: 'asplreng.azurecr.io/ipt-spins:latest' # Image to deploy from your ACR
