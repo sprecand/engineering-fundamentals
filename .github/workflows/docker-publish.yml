@@ -144,11 +144,20 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_RESOURCEGROUP_CONTRIBUTOR_SERVICEPRINICIPAL }}
 
+      - name: Configure Web App for Private Registry Pull
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            az webapp config appsettings set \
+              --name ${{ secrets.AZURE_WEBAPP_NAME }} \
+              --resource-group asplreng \
+              --settings DOCKER_REGISTRY_SERVER_URL="https://asplreng.azurecr.io" \
+                         DOCKER_REGISTRY_SERVER_USERNAME="asplreng" \
+                         DOCKER_REGISTRY_SERVER_PASSWORD="${{ secrets.ACR_PASSWORD }}"
+
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ secrets.AZURE_WEBAPP_NAME }} # Name of your Azure Web App
           resource-group-name: asplreng # Your resource group name
           images: 'asplreng.azurecr.io/ipt-spins:latest' # Image to deploy from your ACR
-          acr-username: asplreng # Your Azure Container Registry name (username for admin account)
-          acr-password: ${{ secrets.ACR_PASSWORD }} # Your ACR admin password secret
