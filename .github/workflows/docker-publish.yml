@@ -150,3 +150,5 @@ jobs:
           app-name: ${{ secrets.AZURE_WEBAPP_NAME }} # Name of your Azure Web App
           resource-group-name: asplreng # Your resource group name
           images: 'asplreng.azurecr.io/ipt-spins:latest' # Image to deploy from your ACR
+          acr-username: asplreng # Your Azure Container Registry name (username for admin account)
+          acr-password: ${{ secrets.ACR_PASSWORD }} # Your ACR admin password secret
